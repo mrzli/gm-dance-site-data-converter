@@ -1,0 +1,8 @@
+{
+  "name": "gm-dance-site-data-converter",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:mrzli/gm-dance-site-data-converter.git",
+  "author": "Goran Mržljak <goran.mrzljak@gmail.com>",
+  "license": "MIT"
+}
