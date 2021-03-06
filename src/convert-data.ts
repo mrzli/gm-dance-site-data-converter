@@ -62,6 +62,9 @@ async function convertData(): Promise<void> {
     .getValue();
 
   await writeJsonToOutput(figuresData, 'figures-data');
+
+  const figureDataHolds = figuresData.map((item) => item.startHold);
+  await writeJsonToOutput(figureDataHolds, 'figure-data-holds');
 }
 
 const HOLD_DELIMITER = ' -> ';
