@@ -1,4 +1,4 @@
-export interface FinalEntry {
+export interface FigureData {
   readonly description: string;
   readonly startHold: string;
   readonly endHold: string;
