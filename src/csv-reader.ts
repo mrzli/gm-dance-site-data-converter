@@ -1,17 +1,20 @@
 import fs from 'fs';
-import csvParser from 'csv-parser';
+import csvParser, { Options } from 'csv-parser';
+import { RawEntry } from './types/raw-entry';
 
-export async function readCsv(filePath: string): Promise<readonly string[]> {
-  return new Promise<readonly string[]>((resolve, reject) => {
-    const results: string[] = [];
+const CSV_OPTIONS: Options = {
+  headers: ['video', 'description', 'holds', 'note', 'notAFigure']
+};
+
+export async function readCsv(filePath: string): Promise<readonly RawEntry[]> {
+  return new Promise<readonly RawEntry[]>((resolve, reject) => {
+    const results: RawEntry[] = [];
     fs.createReadStream(filePath)
-      .pipe(csvParser())
+      .pipe(csvParser(CSV_OPTIONS))
       .on('data', (data) => {
-        console.log(typeof data, data);
         results.push(data);
       })
       .on('end', () => {
-        console.log(results.length);
         resolve(results);
       })
       .on('error', (error) => {
