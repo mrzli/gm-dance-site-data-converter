@@ -19,8 +19,13 @@ export function compareFnNumberDesc(item1: number, item2: number): number {
   return item2 - item1;
 }
 
+const STRING_COMPARE_OPTIONS: Intl.CollatorOptions = {
+  usage: 'sort',
+  sensitivity: 'variant'
+};
+
 export function compareFnStringAsc(item1: string, item2: string): number {
-  return item1.localeCompare(item2, undefined, { sensitivity: 'base' });
+  return item1.localeCompare(item2, 'hr', STRING_COMPARE_OPTIONS);
 }
 
 export function compareFnStringDesc(item1: string, item2: string): number {

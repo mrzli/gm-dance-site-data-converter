@@ -88,6 +88,7 @@ async function getFigureDataHoldsMap(): Promise<Map<string, number>> {
   const figureDataHolds = await readAllText('./input/figure-data-holds.txt');
   return asChainable(figureDataHolds)
     .apply<readonly string[]>((value) => value.split('\n'))
+    .filter((item) => item.trim() !== '')
     .map<string, readonly [string, number]>((hold, index) => [hold, index])
     .apply((value) => new Map<string, number>(value))
     .getValue();
