@@ -27,7 +27,7 @@ export async function getFigureData(): Promise<readonly FigureData[]> {
         startHold,
         endHold,
         note: item.note,
-        video: item.video
+        videos: [item.video]
       };
     })
     .getValue();

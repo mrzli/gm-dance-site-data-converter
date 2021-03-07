@@ -1,85 +1,100 @@
 import { asChainable } from '../utils/chainable';
 import { FigureData } from '../types/figure-data';
-import { FigureSectionData } from '../types/figure-section-data';
 import { compareFnNumberAsc, sortArray } from '../utils/array-utils';
 import { readAllText, writeJsonToOutput } from '../utils/file-system';
 import { getFigureData } from './get-figure-data';
 import { scriptExecutor } from '../utils/script-executor';
-import { WithErrorList } from '../types/with-error-list';
-
-interface HoldFigureDataTuple {
-  readonly hold: string;
-  readonly figureDataList: readonly FigureData[];
-}
-
-interface HoldIndexFigureDataTuple {
-  readonly hold: string;
-  readonly holdIndex: number;
-  readonly figureDataList: readonly FigureData[];
-}
+import { FigureDataWithIndexes } from '../types/figure-data-with-indexes';
+import { FigureSectionDataWithIndexes } from '../types/figure-section-data-with-indexes';
+import { FigureSectionData } from '../types/figure-section-data';
 
 async function convertData(): Promise<void> {
   const figureData = await getFigureData();
   const figureDataHoldsMap = await getFigureDataHoldsMap();
 
-  const figuresDataWithErrors = asChainable(figureData)
+  const holdsWithMissingIndexes = new Set<string>();
+
+  const figuresDataWithIndexes = asChainable(figureData)
     .reduce((acc, item) => {
       const key = item.startHold;
+
+      const startHoldIndex = figureDataHoldsMap.get(item.startHold);
+      if (startHoldIndex === undefined) {
+        holdsWithMissingIndexes.add(item.startHold);
+      }
+      const endHoldIndex = figureDataHoldsMap.get(item.endHold);
+      if (endHoldIndex === undefined) {
+        holdsWithMissingIndexes.add(item.endHold);
+      }
+
+      const processedItem: FigureDataWithIndexes = {
+        ...item,
+        startHoldIndex: startHoldIndex ?? Number.MAX_SAFE_INTEGER,
+        endHoldIndex: endHoldIndex ?? Number.MAX_SAFE_INTEGER
+      };
       if (acc.has(key)) {
-        acc.set(key, (acc.get(key) as readonly FigureData[]).concat(item));
+        acc.set(
+          key,
+          (acc.get(key) as readonly FigureDataWithIndexes[]).concat(
+            processedItem
+          )
+        );
       } else {
-        acc.set(key, [item]);
+        acc.set(key, [processedItem]);
       }
       return acc;
-    }, new Map<string, readonly FigureData[]>())
-    .apply<readonly HoldFigureDataTuple[]>((value) =>
-      Array.from(value.entries()).map(([hold, figureDataList]) => ({
-        hold,
-        figureDataList
-      }))
-    )
-    .reduce<
-      HoldFigureDataTuple,
-      WithErrorList<readonly HoldIndexFigureDataTuple[]>
-    >(
-      (acc, item) => {
-        const holdIndex = figureDataHoldsMap.get(item.hold);
-        const errorList =
-          holdIndex === undefined
-            ? acc.errorList.concat(item.hold)
-            : acc.errorList;
-        const outputItem: HoldIndexFigureDataTuple = {
-          hold: item.hold,
-          holdIndex: holdIndex ?? Number.MAX_SAFE_INTEGER,
-          figureDataList: item.figureDataList
-        };
+    }, new Map<string, readonly FigureDataWithIndexes[]>())
+    .apply<readonly FigureSectionDataWithIndexes[]>((value) =>
+      Array.from(value.values()).map((value) => {
         return {
-          value: acc.value.concat(outputItem),
-          errorList
+          startHold: value[0].startHold,
+          startHoldIndex: value[0].startHoldIndex,
+          figures: value
         };
-      },
-      { value: [], errorList: [] }
+      })
     )
+    .apply<readonly FigureSectionDataWithIndexes[]>((value) =>
+      sortArray(value, (item1, item2) =>
+        compareFnNumberAsc(item1.startHoldIndex, item2.startHoldIndex)
+      )
+    )
+    .map<FigureSectionDataWithIndexes, FigureSectionDataWithIndexes>((item) => {
+      const sortedFigures = asChainable(item.figures)
+        .apply<readonly FigureDataWithIndexes[]>((value) =>
+          sortArray(value, (item1, item2) =>
+            compareFnNumberAsc(item1.endHoldIndex, item2.endHoldIndex)
+          )
+        )
+        .getValue();
+
+      return {
+        ...item,
+        figures: sortedFigures
+      };
+    })
     .getValue();
 
-  if (figuresDataWithErrors.errorList.length > 0) {
+  if (holdsWithMissingIndexes.size > 0) {
     console.error(
       'Hold indexes missing for: ',
-      figuresDataWithErrors.errorList
+      Array.from(holdsWithMissingIndexes)
     );
   }
 
-  const figuresData = asChainable(figuresDataWithErrors.value)
-    .apply<readonly HoldIndexFigureDataTuple[]>((value) =>
-      sortArray(value, (item1, item2) =>
-        compareFnNumberAsc(item1.holdIndex, item2.holdIndex)
-      )
-    )
-    .map<HoldIndexFigureDataTuple, FigureSectionData>((item) => ({
-      startHold: item.hold,
-      figures: item.figureDataList
-    }))
-    .getValue();
+  const figuresData = figuresDataWithIndexes.map<FigureSectionData>(
+    (section) => {
+      return {
+        startHold: section.startHold,
+        figures: section.figures.map<FigureData>((figure) => ({
+          description: figure.description,
+          startHold: figure.startHold,
+          endHold: figure.endHold,
+          note: figure.note,
+          videos: figure.videos
+        }))
+      };
+    }
+  );
 
   await writeJsonToOutput(figuresData, 'figures-data');
 }
