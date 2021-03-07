@@ -3,13 +3,20 @@ import { asChainable } from './utils/chainable';
 import { RawEntry } from './types/raw-entry';
 import { FigureData } from './types/figure-data';
 import { FigureSectionData } from './types/figure-section-data';
-import { compareFnStringAsc, sortArray } from './utils/array-utils';
-import { writeJsonToOutput } from './utils/file-system';
+import {
+  compareFnStringAsc,
+  distinctItems,
+  sortArray
+} from './utils/array-utils';
+import {
+  writeJsonToOutput,
+  writeStringArrayToOutput
+} from './utils/file-system';
 
 type FigureDataListTuple = readonly [string, readonly FigureData[]];
 
 async function convertData(): Promise<void> {
-  const rawData = await readCsv('./data/raw-data.csv');
+  const rawData = await readCsv('./input/raw-data.csv');
 
   const figureData = asChainable(rawData)
     .filter((item) => item.notAFigure !== 'T')
@@ -37,6 +44,12 @@ async function convertData(): Promise<void> {
     })
     .getValue();
 
+  const figureDataHolds: readonly string[] = distinctItems([
+    ...figureData.map((item) => item.startHold),
+    ...figureData.map((item) => item.endHold)
+  ]);
+  await writeStringArrayToOutput(figureDataHolds, 'figure-data-holds');
+
   const figuresData = asChainable(figureData)
     .reduce((acc, item) => {
       const key = item.startHold;
@@ -62,9 +75,6 @@ async function convertData(): Promise<void> {
     .getValue();
 
   await writeJsonToOutput(figuresData, 'figures-data');
-
-  const figureDataHolds = figuresData.map((item) => item.startHold);
-  await writeJsonToOutput(figureDataHolds, 'figure-data-holds');
 }
 
 const HOLD_DELIMITER = ' -> ';

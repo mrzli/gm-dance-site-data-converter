@@ -26,3 +26,20 @@ export function compareFnStringAsc(item1: string, item2: string): number {
 export function compareFnStringDesc(item1: string, item2: string): number {
   return -compareFnStringAsc(item1, item2);
 }
+
+export function distinctItems<TElement>(
+  array: readonly TElement[]
+): readonly TElement[] {
+  const set = new Set<TElement>();
+
+  // using mutable array and forEach for performance
+  const finalArray: TElement[] = [];
+  array.forEach((item) => {
+    if (!set.has(item)) {
+      set.add(item);
+      finalArray.push(item);
+    }
+  });
+
+  return finalArray;
+}
