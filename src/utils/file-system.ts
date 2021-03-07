@@ -3,6 +3,19 @@ import { join } from 'path';
 
 // import { DateTime } from 'luxon';
 
+export async function readAllText(filePath: string): Promise<string> {
+  return new Promise<string>((resolve, reject) => {
+    fs.readFile(filePath, (error, data) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+
+      resolve(data.toString());
+    });
+  });
+}
+
 export async function writeJsonToOutput(
   data: unknown,
   fileName: string

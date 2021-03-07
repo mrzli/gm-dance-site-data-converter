@@ -5,7 +5,7 @@ class Chainable<T> {
     this.value = value;
   }
 
-  public apply<U>(fn: (value: T) => U): Chainable<U> {
+  public apply<U>(this: Chainable<T>, fn: (value: T) => U): Chainable<U> {
     return new Chainable<U>(fn(this.value));
   }
 

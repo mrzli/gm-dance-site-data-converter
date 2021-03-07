@@ -4,6 +4,6 @@ export function scriptExecutor(script: () => Promise<void>): void {
       console.error(error);
     })
     .finally(() => {
-      console.log('Finished!');
+      console.log('Script finished executing...');
     });
 }
