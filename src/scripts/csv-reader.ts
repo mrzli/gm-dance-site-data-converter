@@ -1,6 +1,6 @@
 import fs from 'fs';
 import csvParser, { Options } from 'csv-parser';
-import { RawEntry } from './types/raw-entry';
+import { RawEntry } from '../types/raw-entry';
 
 const CSV_OPTIONS: Options = {
   mapHeaders: csvHeaderMapper

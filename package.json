@@ -6,7 +6,8 @@
   "author": "Goran Mržljak <goran.mrzljak@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "ts-node ./src/convert-data.ts",
+    "start": "ts-node src/scripts/convert-data.ts",
+    "export-figure-holds": "ts-node src/scripts/export-figure-holds.ts",
     "lint": "eslint --ext .ts .",
     "prettier": "prettier --write .",
     "prettier:check": "prettier --check .",
