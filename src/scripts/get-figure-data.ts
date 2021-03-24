@@ -7,7 +7,6 @@ export async function getFigureData(): Promise<readonly FigureData[]> {
   const rawData = await readCsv('./input/raw-data.csv');
 
   return asChainable(rawData)
-    .filter((item) => item.notAFigure !== 'T')
     .apply<readonly RawEntry[]>((value) => {
       let currentVideo = '';
       return value.map((item) => {
@@ -19,6 +18,7 @@ export async function getFigureData(): Promise<readonly FigureData[]> {
         }
       });
     })
+    .filter((item) => item.notAFigure !== 'T') // needs to be after the above to prevent losing video row
     .map<RawEntry, FigureData>((item) => {
       const [startHold, endHold] = getStartAndEndHold(item);
 
