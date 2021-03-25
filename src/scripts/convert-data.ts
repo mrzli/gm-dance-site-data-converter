@@ -1,8 +1,8 @@
 import { asChainable } from '../utils/chainable';
 import { FigureData } from '../types/figure-data';
 import { compareFnNumberAsc, sortArray } from '../utils/array-utils';
-import { readAllText, writeJsonToOutput } from '../utils/file-system';
-import { getFigureData } from './get-figure-data';
+import { readAllText, writeJson } from '../utils/file-system';
+import { getFigureData } from './internal/get-figure-data';
 import { scriptExecutor } from '../utils/script-executor';
 import { FigureDataWithIndexes } from '../types/figure-data-with-indexes';
 import { FigureSectionDataWithIndexes } from '../types/figure-section-data-with-indexes';
@@ -83,7 +83,7 @@ async function convertData(): Promise<void> {
     }
   );
 
-  await writeJsonToOutput(figuresData, 'figures-data');
+  await writeJson(figuresData, 'output', 'figures-data');
 }
 
 function printHoldErrors(

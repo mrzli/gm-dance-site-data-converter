@@ -16,25 +16,31 @@ export async function readAllText(filePath: string): Promise<string> {
   });
 }
 
-export async function writeJsonToOutput(
+export async function writeJson(
   data: unknown,
+  folder: string,
   fileName: string
 ): Promise<void> {
   await fsPromises.writeFile(
-    getFilePath(fileName, 'json'),
+    getFilePath(folder, fileName, 'json'),
     JSON.stringify(data, null, 2)
   );
 }
 
-export async function writeStringArrayToOutput(
+export async function writeStringArray(
   data: readonly string[],
+  folder: string,
   fileName: string
 ): Promise<void> {
-  await writeArrayToFile(data, getFilePath(fileName, 'txt'));
+  await writeArrayToFile(data, getFilePath(folder, fileName, 'txt'));
 }
 
-function getFilePath(fileName: string, extension: string): string {
-  return join(__dirname, `../../output/${fileName}.${extension}`);
+function getFilePath(
+  folder: string,
+  fileName: string,
+  extension: string
+): string {
+  return join(__dirname, `../../${folder}/${fileName}.${extension}`);
 }
 
 async function writeArrayToFile(

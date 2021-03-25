@@ -1,7 +1,7 @@
-import { FigureData } from '../types/figure-data';
+import { FigureData } from '../../types/figure-data';
 import { readCsv } from './csv-reader';
-import { asChainable } from '../utils/chainable';
-import { RawEntry } from '../types/raw-entry';
+import { asChainable } from '../../utils/chainable';
+import { RawEntry } from '../../types/raw-entry';
 
 export async function getFigureData(): Promise<readonly FigureData[]> {
   const rawData = await readCsv('./input/raw-data.csv');

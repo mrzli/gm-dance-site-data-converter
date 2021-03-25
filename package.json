@@ -7,14 +7,21 @@
   "license": "MIT",
   "scripts": {
     "start": "ts-node src/scripts/convert-data.ts",
+    "download-raw-data": "ts-node src/scripts/download-raw-data.ts",
     "export-figure-holds": "ts-node src/scripts/export-figure-holds.ts",
+    "example": "ts-node src/scripts/example.ts",
+    "example-gsheet": "ts-node src/scripts/example-gsheet.ts",
+    "example-gmail": "ts-node src/scripts/example-gmail.ts",
     "lint": "eslint --ext .ts .",
     "prettier": "prettier --write .",
     "prettier:check": "prettier --check .",
     "postinstall": "husky install"
   },
   "dependencies": {
-    "csv-parser": "3.0.0"
+    "csv-parser": "3.0.0",
+    "gaxios": "4.2.0",
+    "google-auth-library": "7.0.3",
+    "googleapis": "68.0.0"
   },
   "devDependencies": {
     "@types/jest": "26.0.21",

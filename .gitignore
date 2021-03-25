@@ -3,3 +3,6 @@
 /input/*
 !/input/figure-data-holds.txt
 /output/
+/secret/
+
+.DS_Store
