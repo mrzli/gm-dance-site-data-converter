@@ -3,7 +3,7 @@ ODlanUDlan
 ORazdvojeno_DL
 ORazdvojeno_LD
 ORazdvojeno_LD_DL
-OZasjednuti
+ODlanUDlanZasjednuti
 PZ
 PZŽDNogaOkoMDNoge
 Z
@@ -17,11 +17,10 @@ RaširenoMDNogaPrekoMLNoge_DL
 RaširenoMDNogaPrekoMLNoge_DL-MLRameIzaVrata
 LD_D-ŽDRame
 LD_D-ŽLRame
-LD_D-ŽLZglob
+LD_MDZglob-ŽLZglob
 LD_D-ŽLZglobRavnoMDesno
 LD_DL-ŽDOkoLakta
 LD_DL-ŽDStrukIzaLeđa
-LD_DL-ŽIzaLeđa
 LD-Dignuta
 LD-DlanNaDlan
 LD-DlanNaDlan_DL

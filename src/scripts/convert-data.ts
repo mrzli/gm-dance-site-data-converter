@@ -10,22 +10,16 @@ import { FigureSectionData } from '../types/figure-section-data';
 
 async function convertData(): Promise<void> {
   const figureData = await getFigureData();
-  const figureDataHoldsMap = await getFigureDataHoldsMap();
+  const figureDataHoldIndexesMap = await getFigureDataHoldIndexesMap();
 
-  const holdsWithMissingIndexes = new Set<string>();
+  printHoldErrors(figureData, figureDataHoldIndexesMap);
 
   const figuresDataWithIndexes = asChainable(figureData)
     .reduce((acc, item) => {
       const key = item.startHold;
 
-      const startHoldIndex = figureDataHoldsMap.get(item.startHold);
-      if (startHoldIndex === undefined) {
-        holdsWithMissingIndexes.add(item.startHold);
-      }
-      const endHoldIndex = figureDataHoldsMap.get(item.endHold);
-      if (endHoldIndex === undefined) {
-        holdsWithMissingIndexes.add(item.endHold);
-      }
+      const startHoldIndex = figureDataHoldIndexesMap.get(item.startHold);
+      const endHoldIndex = figureDataHoldIndexesMap.get(item.endHold);
 
       const processedItem: FigureDataWithIndexes = {
         ...item,
@@ -74,13 +68,6 @@ async function convertData(): Promise<void> {
     })
     .getValue();
 
-  if (holdsWithMissingIndexes.size > 0) {
-    console.error(
-      'Hold indexes missing for: ',
-      Array.from(holdsWithMissingIndexes)
-    );
-  }
-
   const figuresData = figuresDataWithIndexes.map<FigureSectionData>(
     (section) => {
       return {
@@ -99,7 +86,47 @@ async function convertData(): Promise<void> {
   await writeJsonToOutput(figuresData, 'figures-data');
 }
 
-async function getFigureDataHoldsMap(): Promise<Map<string, number>> {
+function printHoldErrors(
+  figureData: readonly FigureData[],
+  figureDataHoldIndexesMap: Map<string, number>
+): void {
+  const figureDataExistingHoldsSet = new Set<string>();
+  figureData.forEach((item) => {
+    figureDataExistingHoldsSet.add(item.startHold);
+    figureDataExistingHoldsSet.add(item.endHold);
+  });
+
+  const figureDataHoldIndexesSet = new Set<string>(
+    figureDataHoldIndexesMap.keys()
+  );
+
+  const holdsWithMissingIndexes = subtractSets(
+    figureDataExistingHoldsSet,
+    figureDataHoldIndexesSet
+  );
+  if (holdsWithMissingIndexes.length > 0) {
+    console.error('Hold indexes missing for:');
+    console.error(holdsWithMissingIndexes);
+  }
+
+  const unknownHoldsInHoldIndexFile = subtractSets(
+    figureDataHoldIndexesSet,
+    figureDataExistingHoldsSet
+  );
+  if (unknownHoldsInHoldIndexFile.length > 0) {
+    console.error('Unknown holds in hold index file:');
+    console.error(unknownHoldsInHoldIndexFile);
+  }
+}
+
+function subtractSets(
+  original: Set<string>,
+  subtractor: Set<string>
+): readonly string[] {
+  return [...original.keys()].filter((item) => !subtractor.has(item));
+}
+
+async function getFigureDataHoldIndexesMap(): Promise<Map<string, number>> {
   const figureDataHolds = await readAllText('./input/figure-data-holds.txt');
   return asChainable(figureDataHolds)
     .apply<readonly string[]>((value) => value.split('\n'))
