@@ -1,9 +1,5 @@
 import { scriptExecutor } from '../utils/script-executor';
-import {
-  getClient,
-  getClientJwt,
-  GOOGLE_SCOPES_GMAIL
-} from './internal/google-auth';
+import { getClientJwt, GOOGLE_SCOPES_GMAIL } from './internal/google-auth';
 import { gmail_v1, google } from 'googleapis';
 import { GaxiosResponse } from 'gaxios';
 import GGmailRequestList = gmail_v1.Params$Resource$Users$Messages$List;
@@ -27,7 +23,7 @@ async function example(): Promise<void> {
       request
     );
     // console.log(JSON.stringify(response.data, null, 2));
-    await writeJson(response.data, 'output', 'gmail-data');
+    await writeJson(response.data, 'output/gmail-data.json');
   } catch (err) {
     console.error(err);
   }

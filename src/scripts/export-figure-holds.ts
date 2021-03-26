@@ -1,6 +1,6 @@
 import { getFigureData } from './internal/get-figure-data';
 import { distinctItems, sortArrayByStringAsc } from '../utils/array-utils';
-import { writeStringArray } from '../utils/file-system';
+import { writeStringLines } from '../utils/file-system';
 import { scriptExecutor } from '../utils/script-executor';
 import { asChainable } from '../utils/chainable';
 
@@ -17,7 +17,7 @@ async function exportFigureHolds(): Promise<void> {
     .apply(sortArrayByStringAsc)
     .getValue();
 
-  await writeStringArray(finalFigureDataHolds, 'output', 'figure-data-holds');
+  await writeStringLines(finalFigureDataHolds, 'output/figure-data-holds.txt');
 }
 
 scriptExecutor(exportFigureHolds);

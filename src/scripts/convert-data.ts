@@ -1,7 +1,7 @@
 import { asChainable } from '../utils/chainable';
 import { FigureData } from '../types/figure-data';
 import { compareFnNumberAsc, sortArray } from '../utils/array-utils';
-import { readAllText, writeJson } from '../utils/file-system';
+import { readText, writeJson } from '../utils/file-system';
 import { getFigureData } from './internal/get-figure-data';
 import { scriptExecutor } from '../utils/script-executor';
 import { FigureDataWithIndexes } from '../types/figure-data-with-indexes';
@@ -83,7 +83,7 @@ async function convertData(): Promise<void> {
     }
   );
 
-  await writeJson(figuresData, 'output', 'figures-data');
+  await writeJson(figuresData, 'output/figures-data.json');
 }
 
 function printHoldErrors(
@@ -127,7 +127,7 @@ function subtractSets(
 }
 
 async function getFigureDataHoldIndexesMap(): Promise<Map<string, number>> {
-  const figureDataHolds = await readAllText('./input/figure-data-holds.txt');
+  const figureDataHolds = await readText('./input/figure-data-holds.txt');
   return asChainable(figureDataHolds)
     .apply<readonly string[]>((value) => value.split('\n'))
     .filter((item) => item.trim() !== '')

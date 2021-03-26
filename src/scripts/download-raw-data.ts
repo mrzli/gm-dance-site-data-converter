@@ -2,7 +2,8 @@ import { scriptExecutor } from '../utils/script-executor';
 import { getClient, GOOGLE_SCOPES_DRIVE } from './internal/google-auth';
 import { google, sheets_v4 } from 'googleapis';
 import { GaxiosResponse } from 'gaxios';
-import { writeJson } from '../utils/file-system';
+import * as csv from 'csv-string';
+import { writeText } from '../utils/file-system';
 import GSheetsApi = sheets_v4.Sheets;
 import GSheetRequest = sheets_v4.Params$Resource$Spreadsheets$Get;
 import GSchemaSpreadsheet = sheets_v4.Schema$Spreadsheet;
@@ -17,9 +18,10 @@ async function downloadRawData(): Promise<void> {
   const sheetsApi: GSheetsApi = google.sheets({ version: 'v4', auth: client });
   const document = await getDocumentData(sheetsApi);
   const visibleData = getVisibleData(document);
+  // const csvLines = toCsvLines(visibleData);
+  const csvText = csv.stringify(visibleData);
 
-  // console.log(JSON.stringify(response.data.sheets?.[1], null, 2));
-  await writeJson(visibleData, 'output', 'raw-data-2');
+  await writeText(csvText, 'input/raw-data.csv');
 }
 
 async function getDocumentData(
@@ -37,9 +39,7 @@ async function getDocumentData(
   return response.data;
 }
 
-function getVisibleData(
-  document: GSchemaSpreadsheet
-): readonly ReadonlyArray<string>[] {
+function getVisibleData(document: GSchemaSpreadsheet): string[][] {
   const sheet = document.sheets?.find(
     (s) => s.properties?.title === 'By Videos'
   );
@@ -49,11 +49,15 @@ function getVisibleData(
   }
 
   return rowData
-    .filter((rowItem) => rowItem.values !== undefined)
+    .filter(
+      (rowItem) =>
+        rowItem.values !== undefined &&
+        rowItem.values.some((value) => !!value.formattedValue)
+    )
     .map((rowItem) => getRowVisibleData(rowItem));
 }
 
-function getRowVisibleData(rowItem: GSheetRowData): readonly string[] {
+function getRowVisibleData(rowItem: GSheetRowData): string[] {
   if (rowItem.values === undefined) {
     throw new Error('Rows need to be filtered, this is an error');
   }
@@ -63,8 +67,16 @@ function getRowVisibleData(rowItem: GSheetRowData): readonly string[] {
     .map((cellItem) => cellItem.formattedValue ?? '');
 }
 
-function toCsv(visibleData: readonly ReadonlyArray<string>[]): string {
-  return '';
-}
+// function toCsvLines(
+//   visibleData: readonly ReadonlyArray<string>[]
+// ): readonly string[] {
+//   return visibleData.map((visibleDataLine) =>
+//     visibleDataLine.map(toCsvString).join(',')
+//   );
+// }
+//
+// function toCsvString(value: string): string {
+//   return value.includes(',') ? `"${value}"` : value;
+// }
 
 scriptExecutor(downloadRawData);

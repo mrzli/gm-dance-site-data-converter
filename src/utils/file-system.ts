@@ -3,7 +3,7 @@ import { join } from 'path';
 
 // import { DateTime } from 'luxon';
 
-export async function readAllText(filePath: string): Promise<string> {
+export async function readText(filePath: string): Promise<string> {
   return new Promise<string>((resolve, reject) => {
     fs.readFile(filePath, (error, data) => {
       if (error) {
@@ -16,44 +16,48 @@ export async function readAllText(filePath: string): Promise<string> {
   });
 }
 
+export async function writeText(data: string, filePath: string): Promise<void> {
+  await fsPromises.writeFile(filePath, data);
+}
+
 export async function writeJson(
   data: unknown,
-  folder: string,
-  fileName: string
+  filePath: string
 ): Promise<void> {
   await fsPromises.writeFile(
-    getFilePath(folder, fileName, 'json'),
+    getFilePath(filePath),
     JSON.stringify(data, null, 2)
   );
 }
 
-export async function writeStringArray(
+export async function writeStringLines(
   data: readonly string[],
-  folder: string,
-  fileName: string
+  filePath: string
 ): Promise<void> {
-  await writeArrayToFile(data, getFilePath(folder, fileName, 'txt'));
+  await writeArrayToFile(data, getFilePath(filePath));
 }
 
-function getFilePath(
-  folder: string,
-  fileName: string,
-  extension: string
-): string {
-  return join(__dirname, `../../${folder}/${fileName}.${extension}`);
+function getFilePath(path: string): string {
+  return join(__dirname, `../../${path}`);
 }
 
 async function writeArrayToFile(
   data: readonly string[],
-  path: string
+  filePath: string
 ): Promise<void> {
   return new Promise<void>((resolve, reject) => {
-    const writeStream = fs.createWriteStream(path);
+    const writeStream = fs.createWriteStream(filePath);
+    let isFirstLine = true;
     writeStream.on('error', (error) => {
       reject(error);
     });
     data.forEach((line) => {
-      writeStream.write(`${line}\n`);
+      if (isFirstLine) {
+        writeStream.write(line);
+        isFirstLine = false;
+      } else {
+        writeStream.write(`\n${line}`);
+      }
     });
     writeStream.end(() => {
       resolve();

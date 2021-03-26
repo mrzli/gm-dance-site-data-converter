@@ -1,5 +1,5 @@
 import { google } from 'googleapis';
-import { readAllText } from '../../utils/file-system';
+import { readText } from '../../utils/file-system';
 import {
   Compute,
   BaseExternalAccountClient,
@@ -57,6 +57,6 @@ interface Credentials {
 async function getCredentials(
   credentialsFilePath: string
 ): Promise<Credentials> {
-  const credentialsText = await readAllText(credentialsFilePath);
+  const credentialsText = await readText(credentialsFilePath);
   return JSON.parse(credentialsText);
 }
