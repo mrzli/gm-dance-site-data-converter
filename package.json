@@ -6,9 +6,11 @@
   "author": "Goran Mržljak <goran.mrzljak@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "ts-node src/scripts/convert-data.ts",
+    "convert-data": "ts-node src/scripts/convert-data.ts",
     "download-raw-data": "ts-node src/scripts/download-raw-data.ts",
     "export-figure-holds": "ts-node src/scripts/export-figure-holds.ts",
+    "copy-to-dance": "ts-node src/scripts/copy-to-dance.ts",
+    "full-process": "yarn download-raw-data && yarn convert-data && yarn copy-to-dance",
     "example": "ts-node src/scripts/example.ts",
     "example-gsheet": "ts-node src/scripts/example-gsheet.ts",
     "example-gmail": "ts-node src/scripts/example-gmail.ts",

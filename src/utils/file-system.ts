@@ -25,7 +25,7 @@ export async function writeJson(
   filePath: string
 ): Promise<void> {
   await fsPromises.writeFile(
-    getFilePath(filePath),
+    getProjectRelativePath(filePath),
     JSON.stringify(data, null, 2)
   );
 }
@@ -34,11 +34,11 @@ export async function writeStringLines(
   data: readonly string[],
   filePath: string
 ): Promise<void> {
-  await writeArrayToFile(data, getFilePath(filePath));
+  await writeArrayToFile(data, getProjectRelativePath(filePath));
 }
 
-function getFilePath(path: string): string {
-  return join(__dirname, `../../${path}`);
+function getProjectRelativePath(path: string): string {
+  return join(__dirname, '../../', path);
 }
 
 async function writeArrayToFile(
@@ -63,6 +63,16 @@ async function writeArrayToFile(
       resolve();
     });
   });
+}
+
+export async function copyFile(
+  sourcePath: string,
+  destinationPath: string
+): Promise<void> {
+  const fullSourcePath = getProjectRelativePath(sourcePath);
+  const fullDestinationPath = getProjectRelativePath(destinationPath);
+
+  await fsPromises.copyFile(fullSourcePath, fullDestinationPath);
 }
 
 // export function getCurrentTimeString(): string {
