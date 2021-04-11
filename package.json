@@ -23,20 +23,20 @@
     "csv-parser": "3.0.0",
     "csv-string": "4.0.1",
     "gaxios": "4.2.0",
-    "google-auth-library": "7.0.3",
-    "googleapis": "68.0.0"
+    "google-auth-library": "7.0.4",
+    "googleapis": "71.0.0"
   },
   "devDependencies": {
     "@types/jest": "26.0.22",
     "@types/node": "14.14.37",
-    "@typescript-eslint/eslint-plugin": "4.19.0",
-    "@typescript-eslint/parser": "4.19.0",
-    "eslint": "7.23.0",
+    "@typescript-eslint/eslint-plugin": "4.21.0",
+    "@typescript-eslint/parser": "4.21.0",
+    "eslint": "7.24.0",
     "eslint-config-prettier": "8.1.0",
     "eslint-plugin-prettier": "3.3.1",
-    "husky": "5.2.0",
+    "husky": "6.0.0",
     "prettier": "2.2.1",
     "ts-node": "9.1.1",
-    "typescript": "4.2.3"
+    "typescript": "4.2.4"
   }
 }
