@@ -97,6 +97,7 @@ L90_L-ŽDLopatica_D-ŽLStruk
 L90_L-ŽDLopatica_D-ŽPrednjaRebra
 L90_L-ŽDLopatica>ŽD-MLLopatica
 L90_L-ŽDRame_D-ŽLLopatica
+L90_L-ŽDRame_D-ŽLStruk
 L90_L-ŽLeđa_D-ŽLStruk
 L90_L-ŽLRame_D-ŽLStruk
 L90_LD-RavnoGore_D-ŽLLopatica
