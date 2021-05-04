@@ -82,7 +82,7 @@ D90_L-ŽDKuk_D-ŽLeđa
 D90_L-ŽDRame_D-ŽLLopatica
 D90_L-ŽDStruk
 D90_L-ŽLRame_DL-ŽDStruk
-D90_L-ŽLZglob_DL-ŽDStrukIzaLeđa
+D90_L-ŽLZglob_DL-ŽDStruk
 D90_LD_DL-ŽDRame
 D90_LD_DL-ŽDStruk
 D90_LD-RavnoNanprijed_D-ŽLLopatica
