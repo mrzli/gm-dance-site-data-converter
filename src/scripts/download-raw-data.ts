@@ -32,9 +32,8 @@ async function getDocumentData(
     includeGridData: true
   };
 
-  const response: GaxiosResponse<GSchemaSpreadsheet> = await sheetsApi.spreadsheets.get(
-    request
-  );
+  const response: GaxiosResponse<GSchemaSpreadsheet> =
+    await sheetsApi.spreadsheets.get(request);
 
   return response.data;
 }

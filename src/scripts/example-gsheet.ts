@@ -20,9 +20,8 @@ async function exampleGsheet(): Promise<void> {
   };
 
   try {
-    const response: GaxiosResponse<GSchemaSpreadsheet> = await sheets.spreadsheets.get(
-      request
-    );
+    const response: GaxiosResponse<GSchemaSpreadsheet> =
+      await sheets.spreadsheets.get(request);
     // console.log(JSON.stringify(response.data.sheets?.[1], null, 2));
     await writeJson(response.data, 'output/gsheet-data.json');
   } catch (err) {

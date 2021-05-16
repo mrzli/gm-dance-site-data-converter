@@ -19,9 +19,8 @@ async function example(): Promise<void> {
   };
 
   try {
-    const response: GaxiosResponse<GListMessagesResponse> = await gmail.users.messages.list(
-      request
-    );
+    const response: GaxiosResponse<GListMessagesResponse> =
+      await gmail.users.messages.list(request);
     // console.log(JSON.stringify(response.data, null, 2));
     await writeJson(response.data, 'output/gmail-data.json');
   } catch (err) {
