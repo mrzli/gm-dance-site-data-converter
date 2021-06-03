@@ -23,12 +23,12 @@
     "csv-parser": "3.0.0",
     "csv-string": "4.0.1",
     "gaxios": "4.3.0",
-    "google-auth-library": "7.1.0",
-    "googleapis": "74.2.0"
+    "google-auth-library": "7.1.1",
+    "googleapis": "75.0.0"
   },
   "devDependencies": {
     "@types/jest": "26.0.23",
-    "@types/node": "15.6.1",
+    "@types/node": "15.12.0",
     "@typescript-eslint/eslint-plugin": "4.26.0",
     "@typescript-eslint/parser": "4.26.0",
     "eslint": "7.27.0",
